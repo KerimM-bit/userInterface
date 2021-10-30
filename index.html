@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+   <!-- When interface opens for the first time. All components will be visible
+So Client start by entering his/her information to related box of the Interface. 
+Then Client will click to Save User button to save data. 
+New User button will hide or show the Sign In informations of the application. 
+Hide disabled User will show which Client click to checkbox inside the Form component. 
+Clicking HTML Table column will sort the table by clicked column.  -->
+<head>
+    <title>Table</title>
+    <link rel="stylesheet" href="style.css">
+    <!--  jQuery-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+    <!--  I will start by creating 2 containers. 
+    One of them will be like  navbar covering top of the screen-->
+<body>
+    <div id='container'>
+        <div id="parent">
+            <button id='newuser'> + New User </button>
+
+            <div id="check">
+                <input type="checkbox" onclick="return filter_type(this);" id='hidedisabled'>
+                <label>Hide Disabled Users</label>
+            </div>
+            <button id='saveduser'> Save User </button>
+
+        </div>
+    </div>
+    </div>
+    <!-- I'm going to create 2 section in the scond container.
+    One of them for HTML Table and other one for the HTML Form component  -->
+    <div id="containerTwo">
+        <section id="table">
+            <table class="table-sortable" border=1, id="show">
+                <thead>
+                    <tr>
+                        <th id="idx">ID</th>
+                        <th >User Name</th>
+                        <th >Email</th>
+                        <th >Enabled</th>
+                    </tr>
+                </thead>
+            </table>
+        </section>
+
+        <section id="formParent">
+            <div class='listholder' id="form">
+   <!--I'm going to use input and label elements to create pure New User interface
+   In order to call them from CSS id values will be given  -->
+                <form id="myform">
+
+                    <label style="font-size: 20px; background-color:rgb(236, 236, 231); width: 98%;">New User</label>
+                    <br />
+                    <label>User Name :</label>
+                    <input type='text' id='username'><br>
+                    <label>Display Name :</label>
+                    <input type='text' id='dispname'><br>
+                    <label>Phone :</label>
+                    <input type='number' id='phone'><br>
+                    <label>Email :</label>
+                    <input type='text' id='email'><br>
+                    <label>User Role :</label>
+                    <select required>
+                        <option value="" disabled selected hidden>Select user roles...</option>
+                        <option value="Guest">Guest</option>
+                        <option value="Admin">Admin</option>
+                        <option value="SuperAdmin">SuperAdmin</option>
+                    </select><br>
+                    <label>Enabled :</label>
+                    <input type="checkbox" , value='False' , id='enabledChck'><br>
+
+                </form>
+            </div>
+        </section>
+
+
+    </div>
+
+    <script>
+        // ID column will help to get faster results from back end of the application
+        // Creating ID column to autoincrement as application's CLient side add data to HTML Table
+        let list2 = [];
+        let list3 = [];
+        let list4 = [];
+
+        let n = 1;
+        let x = 0;
+        let id = 0;
+        const addRow = () => {
+
+
+            console.log("Data Added")
+
+            if ($("#show thead tr").length == 0) {
+                id = 1;
+            } else if ($("#show thead tr").length > 0) {
+                id++;
+            }
+
+
+           // Adding user data to HTML table
+            let AddRown = document.getElementById('show');
+            let NewRow = AddRown.insertRow(n);
+            // I'm using ids of the Form elements and iserting them to the HTML Table
+            list2[x] = document.getElementById("username").value;
+            list3[x] = document.getElementById("email").value;
+            list4[x] = document.getElementById("enabledChck").checked;
+
+            let cel1 = NewRow.insertCell(0);
+            let cel2 = NewRow.insertCell(1);
+            let cel3 = NewRow.insertCell(2);
+            let cel4 = NewRow.insertCell(3);
+
+            cel1.innerHTML = id;
+            cel2.innerHTML = list2[x];
+            cel3.innerHTML = list3[x];
+            cel4.innerHTML = list4[x];
+
+            n++;
+            x++;
+        }
+
+        // Getting Enabled checkbox values as True/False and writing them to Html Table
+        function getChecked() {
+            let form = document.getElementById('enabledChck');
+            let chks = form.querySelectorAll('input[type="checkbox"]');
+            let checked = []
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].checked) {
+                    checked.push(chks[i].value)
+                }
+            }
+            return checked;
+        }
+
+        let getValues = function () {
+            let nodes = document.getElementById('enabledChck').children;
+            let checkedValues = [],
+                length = nodes.length, i = 0
+            for (i; i < length; i++) {
+                if (nodes[i].checked)
+                    checkedValues.push(node[i].value);
+            }
+            return checkedValues;
+        }
+        // By creating click action I'm saving User inputs to the HTML Table
+        // I'm connecting Save User button to this action
+        let savedUserButton = document.getElementById("saveduser");
+        savedUserButton.addEventListener("click", addRow);
+
+        // Show and Hide Form HTML component with +New User button/
+        // Inital opening of the application will show New User  part. 
+        //After that when New User button clickled it will hide the Form part of the application
+        // on the second click it'll be visible again 
+        let newUser = document.querySelector('#newuser')
+        let divList = document.querySelector('.listholder')
+
+        newUser.addEventListener('click', () => {
+            if (divList.style.display == 'block') {
+                divList.style.display = 'none';
+            } else {
+                divList.style.display = 'block'
+
+            }
+        })
+        // Hiding disabled user 
+        //
+        let prevStyle;
+        function filter_type(box) {
+            let hideDisabledValue = document.getElementById("hidedisabled").checked;
+
+
+            var tableBody = $('#show > thead');
+            // Get this element's content.
+            var rows = tableBody.find('tr')
+
+
+            for (let index = 1; index < rows.length; index++) {
+                let enabled = rows[index].children[3].innerHTML
+
+
+                if (hideDisabledValue) {
+                    if (enabled === "false") {
+                        prevStyle = rows[index].style;
+                        rows[index].style.display = "none";
+                    }
+                }
+
+                else {
+                    rows[index].style = prevStyle;
+                }
+            }
+
+
+        };
+        // Sorting data  based on column headers
+        //After getting data from the Users, by clicking HTML Table columns(all four of them)
+        // we can sort data column of our choosing. 
+        th = document.getElementsByTagName('th');
+
+        for (let c = 0; c < th.length; c++) {
+
+            th[c].addEventListener('click', item(c))
+        }
+
+        function item(c) {
+
+            return function () {
+                console.log(c)
+                sortTable(c)
+            }
+        }
+        function sortTable(c) {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("show");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[c];
+                    y = rows[i + 1].getElementsByTagName("td")[c];
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        console.log(x.innerHTML);
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>
