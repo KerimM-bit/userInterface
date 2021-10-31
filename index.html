@@ -9,6 +9,7 @@ Clicking HTML Table column will sort the table by clicked column.  -->
 <head>
     <title>Table</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--  jQuery-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
@@ -32,13 +33,13 @@ Clicking HTML Table column will sort the table by clicked column.  -->
     One of them for HTML Table and other one for the HTML Form component  -->
     <div id="containerTwo">
         <section id="table">
-            <table class="table-sortable" border=1, id="show">
+            <table  border=1, id="show">
                 <thead>
                     <tr>
-                        <th id="idx">ID</th>
-                        <th >User Name</th>
-                        <th >Email</th>
-                        <th >Enabled</th>
+                        <th scope="col"><a href="#" class="sort-by"id="idx">ID</th>
+                        <th scope="col"><a href="#" class="sort-by"> User Name</th>
+                        <th scope="col"><a href="#" class="sort-by"> Email</th>
+                        <th scope="col"><a href="#" class="sort-by"> Enabled</th>
                     </tr>
                 </thead>
             </table>
